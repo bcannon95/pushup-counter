@@ -126,8 +126,8 @@ function onPointerMove(e) {
   // Update wheel visual
   wheelEl.style.transform = `rotate(${wheelAngle}deg)`;
 
-  // Calculate pending reps: each full 360° = 10 reps
-  const newPending = Math.floor(Math.abs(totalAngle) / 360) * 10;
+  // Calculate pending reps: 36° per rep, 10 reps per full rotation
+  const newPending = Math.floor(Math.abs(totalAngle) / 36);
   if (newPending !== pendingReps) {
     pendingReps = newPending;
     updatePendingUI();
