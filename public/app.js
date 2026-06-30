@@ -345,12 +345,26 @@ async function loadUser(name) {
     localStorage.setItem('pushup_name', name);
 
     document.getElementById('name-screen').classList.remove('active');
+    document.getElementById('leaderboard-screen').classList.remove('active');
     document.getElementById('main-screen').classList.add('active');
 
     updateProgressUI();
     renderHistory();
     updatePendingUI();
     resetWheel();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function loadUserSilently(name) {
+  try {
+    const data = await API.getUser(name);
+    currentUser = data.user;
+    todayBanked = data.today.banked;
+    todayDate   = data.today.date;
+    history     = data.history;
+    // Stay on leaderboard — data is ready if they click track
   } catch (err) {
     console.error(err);
   }
@@ -384,7 +398,12 @@ function showLeaderboard(returnTo = 'main-screen') {
 
 function hideLeaderboard() {
   document.getElementById('leaderboard-screen').classList.remove('active');
-  document.getElementById(leaderboardReturnScreen).classList.add('active');
+  // If returning from within the app use the stored screen, otherwise
+  // go to main if we have a user, or name entry if we don't.
+  const dest = leaderboardReturnScreen !== 'leaderboard-screen'
+    ? leaderboardReturnScreen
+    : currentUser ? 'main-screen' : 'name-screen';
+  document.getElementById(dest).classList.add('active');
 }
 
 async function loadLeaderboard() {
@@ -486,11 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Enter') saveSettings();
   });
 
-  // Auto-load saved name
+  // Always start on leaderboard; silently prep user data if name is saved
+  loadLeaderboard();
   const saved = localStorage.getItem('pushup_name');
-  if (saved) {
-    loadUser(saved);
-  } else {
-    document.getElementById('name-input').focus();
-  }
+  if (saved) loadUserSilently(saved);
 });
