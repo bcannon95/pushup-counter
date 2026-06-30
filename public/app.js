@@ -372,7 +372,11 @@ function showNameScreen() {
 }
 
 // ─── Leaderboard ──────────────────────────────────────
-function showLeaderboard() {
+let leaderboardReturnScreen = 'main-screen';
+
+function showLeaderboard(returnTo = 'main-screen') {
+  leaderboardReturnScreen = returnTo;
+  document.getElementById('name-screen').classList.remove('active');
   document.getElementById('main-screen').classList.remove('active');
   document.getElementById('leaderboard-screen').classList.add('active');
   loadLeaderboard();
@@ -380,7 +384,7 @@ function showLeaderboard() {
 
 function hideLeaderboard() {
   document.getElementById('leaderboard-screen').classList.remove('active');
-  document.getElementById('main-screen').classList.add('active');
+  document.getElementById(leaderboardReturnScreen).classList.add('active');
 }
 
 async function loadLeaderboard() {
@@ -468,7 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('change-name-btn').addEventListener('click', showNameScreen);
 
   // Leaderboard
-  document.getElementById('leaderboard-btn').addEventListener('click', showLeaderboard);
+  document.getElementById('leaderboard-btn').addEventListener('click', () => showLeaderboard('main-screen'));
+  document.getElementById('name-leaderboard-btn').addEventListener('click', () => showLeaderboard('name-screen'));
   document.getElementById('leaderboard-back-btn').addEventListener('click', hideLeaderboard);
   document.getElementById('leaderboard-refresh-btn').addEventListener('click', loadLeaderboard);
 
