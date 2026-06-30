@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Push-up Counter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Name Entry Screen -->
+  <div id="name-screen" class="screen active">
+    <div class="name-container">
+      <div class="logo">PUSH<span class="dot">.</span></div>
+      <p class="tagline">daily push-up tracker</p>
+      <form id="name-form" class="name-form" autocomplete="off">
+        <input
+          type="text"
+          id="name-input"
+          placeholder="your name"
+          maxlength="32"
+          spellcheck="false"
+        />
+        <button type="submit" id="name-submit">GO</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Screen -->
+  <div id="main-screen" class="screen">
+    <header class="header">
+      <div class="header-left">
+        <span class="logo-small">PUSH<span class="dot">.</span></span>
+        <button id="change-name-btn" class="btn-ghost">change</button>
+      </div>
+      <button id="settings-btn" class="btn-ghost settings-icon" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="progress-section">
+      <div class="progress-numbers">
+        <span id="banked-count" class="count-banked">0</span>
+        <span class="count-sep">/</span>
+        <span id="target-count" class="count-target">100</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <div class="progress-label">today's push-ups</div>
+    </div>
+
+    <div class="wheel-section">
+      <div class="pending-wrapper">
+        <span id="pending-count" class="pending-count">0</span>
+        <span class="pending-label">pending</span>
+      </div>
+
+      <div class="wheel-outer">
+        <div class="wheel-indicator-wrap">
+          <div class="wheel-indicator"></div>
+        </div>
+        <svg
+          id="wheel"
+          viewBox="0 0 320 320"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="Spin to count push-ups"
+        >
+          <!-- Outer bezel -->
+          <circle cx="160" cy="160" r="158" fill="#0d0d0f" stroke="#2a2a30" stroke-width="1"/>
+          <!-- Wheel body -->
+          <circle cx="160" cy="160" r="148" fill="#141418" stroke="#a7a7a9" stroke-width="1.5"/>
+          <!-- Tick marks -->
+          <g id="wheel-marks"></g>
+          <!-- Inner ring -->
+          <circle cx="160" cy="160" r="56" fill="#0d0d0f" stroke="#2a2a30" stroke-width="1"/>
+          <!-- Center count -->
+          <text id="wheel-center-text" x="160" y="155" text-anchor="middle" dominant-baseline="middle" class="wheel-center-text" font-size="28" fill="#a7a7a9" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="300">0</text>
+          <text x="160" y="176" text-anchor="middle" class="wheel-center-label" font-size="10" fill="#544d62" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" letter-spacing="2">REPS</text>
+          <!-- Hub -->
+          <circle cx="160" cy="160" r="10" fill="#a7a7a9"/>
+          <circle cx="160" cy="160" r="4" fill="#0d0d0f"/>
+        </svg>
+      </div>
+
+      <button id="bank-btn" class="bank-button" disabled>
+        BANK <span id="bank-amount">0</span>
+      </button>
+    </div>
+
+    <div class="history-section">
+      <div class="history-header">
+        <span class="history-title">HISTORY</span>
+        <span id="streak-display" class="streak"></span>
+      </div>
+      <div id="history-grid" class="history-grid"></div>
+    </div>
+  </div>
+
+  <!-- Celebration overlay -->
+  <div id="celebration" class="celebration hidden">
+    <div class="celebration-inner">
+      <div class="celebration-number" id="celebration-number">100</div>
+      <div class="celebration-text">TARGET HIT</div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box">
+      <h2 class="modal-title">SETTINGS</h2>
+      <div class="modal-field">
+        <label for="target-input">Daily target</label>
+        <input type="number" id="target-input" min="1" max="9999" value="100" />
+      </div>
+      <div class="modal-user-display">
+        <label>Name</label>
+        <span id="modal-user-name"></span>
+      </div>
+      <div class="modal-actions">
+        <button id="settings-cancel" class="btn-ghost">Cancel</button>
+        <button id="settings-save" class="btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

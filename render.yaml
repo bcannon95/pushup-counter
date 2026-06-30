@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: pushup-counter
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    disk:
+      name: pushup-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: DB_PATH
+        value: /data/pushups.db
+      - key: NODE_ENV
+        value: production
