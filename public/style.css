@@ -607,6 +607,132 @@ html, body {
   background: var(--white);
 }
 
+/* ─── Leaderboard ─────────────────────────────────── */
+
+.lb-section {
+  width: 100%;
+  max-width: 480px;
+  padding: 8px 24px 40px;
+  flex: 1;
+}
+
+.lb-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.lb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.lb-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.lb-row:first-child {
+  border-top: 1px solid var(--border);
+}
+
+.lb-rank {
+  font-size: 11px;
+  color: var(--smokey-pink);
+  font-weight: 400;
+  text-align: right;
+}
+
+.lb-rank.top {
+  color: var(--peach);
+  font-weight: 600;
+}
+
+.lb-name-col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.lb-name {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lb-meta {
+  display: flex;
+  gap: 10px;
+}
+
+.lb-meta-item {
+  font-size: 10px;
+  color: var(--smokey-pink);
+  letter-spacing: 0.1em;
+}
+
+.lb-meta-item span {
+  color: var(--silver);
+}
+
+.lb-bar-wrap {
+  width: 60px;
+  height: 2px;
+  background: var(--border);
+  margin-top: 3px;
+}
+
+.lb-bar {
+  height: 100%;
+  background: var(--smokey-pink);
+  transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.lb-row:first-child .lb-bar {
+  background: var(--peach);
+}
+
+.lb-total-col {
+  text-align: right;
+}
+
+.lb-total {
+  font-size: 22px;
+  font-weight: 200;
+  color: var(--silver);
+  line-height: 1;
+}
+
+.lb-row:first-child .lb-total {
+  color: var(--peach);
+}
+
+.lb-total-label {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--smokey-pink);
+  text-transform: uppercase;
+}
+
+.lb-empty {
+  font-size: 12px;
+  color: var(--smokey-pink);
+  letter-spacing: 0.1em;
+  padding: 40px 0;
+  text-align: center;
+}
+
 /* ─── Utility ─────────────────────────────────────── */
 
 .hidden {

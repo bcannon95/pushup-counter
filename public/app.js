@@ -371,6 +371,71 @@ function showNameScreen() {
   document.getElementById('name-input').focus();
 }
 
+// ─── Leaderboard ──────────────────────────────────────
+function showLeaderboard() {
+  document.getElementById('main-screen').classList.remove('active');
+  document.getElementById('leaderboard-screen').classList.add('active');
+  loadLeaderboard();
+}
+
+function hideLeaderboard() {
+  document.getElementById('leaderboard-screen').classList.remove('active');
+  document.getElementById('main-screen').classList.add('active');
+}
+
+async function loadLeaderboard() {
+  const list = document.getElementById('lb-list');
+  list.innerHTML = '<div class="lb-empty">loading...</div>';
+
+  try {
+    const rows = await fetch('/api/leaderboard').then(r => r.json());
+    renderLeaderboard(rows);
+  } catch {
+    list.innerHTML = '<div class="lb-empty">failed to load</div>';
+  }
+}
+
+function renderLeaderboard(rows) {
+  const list = document.getElementById('lb-list');
+  list.innerHTML = '';
+
+  if (!rows.length) {
+    list.innerHTML = '<div class="lb-empty">no data yet</div>';
+    return;
+  }
+
+  const maxTotal = rows[0].total;
+
+  rows.forEach((row, i) => {
+    const rank = i + 1;
+    const pct  = maxTotal > 0 ? (row.total / maxTotal) * 100 : 0;
+
+    const el = document.createElement('div');
+    el.className = 'lb-row';
+    el.innerHTML = `
+      <div class="lb-rank ${rank <= 3 ? 'top' : ''}">${rank}</div>
+      <div class="lb-name-col">
+        <div class="lb-name">${escapeHtml(row.name)}</div>
+        <div class="lb-meta">
+          <span class="lb-meta-item">${row.days_active} day${row.days_active !== 1 ? 's' : ''}</span>
+          <span class="lb-meta-item">best <span>${row.best_day}</span></span>
+          ${row.today > 0 ? `<span class="lb-meta-item">today <span>${row.today}</span></span>` : ''}
+        </div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="lb-total-col">
+        <div class="lb-total">${row.total.toLocaleString()}</div>
+        <div class="lb-total-label">total</div>
+      </div>
+    `;
+    list.appendChild(el);
+  });
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
 // ─── Init ─────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   wheelEl         = document.getElementById('wheel');
@@ -401,6 +466,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Change name
   document.getElementById('change-name-btn').addEventListener('click', showNameScreen);
+
+  // Leaderboard
+  document.getElementById('leaderboard-btn').addEventListener('click', showLeaderboard);
+  document.getElementById('leaderboard-back-btn').addEventListener('click', hideLeaderboard);
+  document.getElementById('leaderboard-refresh-btn').addEventListener('click', loadLeaderboard);
 
   // Settings
   document.getElementById('settings-btn').addEventListener('click', openSettings);

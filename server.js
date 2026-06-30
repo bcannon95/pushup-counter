@@ -102,6 +102,25 @@ app.put('/api/settings/:name', (req, res) => {
   res.json({ daily_target });
 });
 
+// All-time leaderboard
+app.get('/api/leaderboard', (req, res) => {
+  const rows = db.prepare(`
+    SELECT
+      u.name,
+      COALESCE(SUM(dl.banked), 0)                              AS total,
+      COUNT(CASE WHEN dl.banked > 0 THEN 1 END)               AS days_active,
+      COALESCE(MAX(dl.banked), 0)                              AS best_day,
+      COALESCE(SUM(CASE WHEN dl.date = ? THEN dl.banked END), 0) AS today
+    FROM users u
+    LEFT JOIN daily_logs dl ON u.id = dl.user_id
+    GROUP BY u.id
+    HAVING total > 0
+    ORDER BY total DESC
+  `).all(getToday());
+
+  res.json(rows);
+});
+
 app.listen(PORT, () => {
   console.log(`Push-up counter running at http://localhost:${PORT}`);
 });
