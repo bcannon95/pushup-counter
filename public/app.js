@@ -406,19 +406,64 @@ function hideLeaderboard() {
   document.getElementById(dest).classList.add('active');
 }
 
+const CONTRIBUTION_COLOURS = [
+  '#bb8e8a', // peach
+  '#888958', // gumtree
+  '#c6cad3', // lavender
+  '#782b51', // burgundy
+  '#544d62', // smokey pink
+  '#a7a7a9', // silver
+];
+
 async function loadLeaderboard() {
   const list = document.getElementById('lb-list');
   list.innerHTML = '<div class="lb-empty">loading...</div>';
 
   try {
-    const rows = await fetch('/api/leaderboard').then(r => r.json());
-    renderLeaderboard(rows);
+    const data = await fetch('/api/leaderboard').then(r => r.json());
+    renderGroupGoal(data.rows, data.goal);
+    renderLeaderboard(data.rows, data.goal);
   } catch {
     list.innerHTML = '<div class="lb-empty">failed to load</div>';
   }
 }
 
-function renderLeaderboard(rows) {
+function renderGroupGoal(rows, goal) {
+  const groupTotal = rows.reduce((s, r) => s + r.total, 0);
+  const pct        = Math.min((groupTotal / goal.target) * 100, 100);
+  const remaining  = Math.max(goal.target - groupTotal, 0);
+  const complete   = groupTotal >= goal.target;
+
+  document.getElementById('gg-reward').textContent  = goal.reward;
+  document.getElementById('gg-total').textContent   = groupTotal.toLocaleString();
+  document.getElementById('gg-target').textContent  = goal.target.toLocaleString();
+  document.getElementById('gg-pct').textContent     = Math.floor(pct) + '%';
+  document.getElementById('gg-remaining').textContent = remaining > 0
+    ? `${remaining.toLocaleString()} to go`
+    : 'goal reached';
+
+  const fill = document.getElementById('gg-fill');
+  fill.style.width = pct + '%';
+  fill.classList.toggle('complete', complete);
+
+  // Stacked bar
+  const stack = document.getElementById('gg-stack');
+  stack.innerHTML = '';
+  rows.forEach((row, i) => {
+    const segPct = groupTotal > 0 ? (row.total / goal.target) * 100 : 0;
+    const colour = CONTRIBUTION_COLOURS[i % CONTRIBUTION_COLOURS.length];
+    const seg    = document.createElement('div');
+    seg.className = 'gg-segment';
+    seg.style.width      = segPct + '%';
+    seg.style.background = colour;
+    seg.title            = `${row.name}: ${row.total.toLocaleString()}`;
+    // Only show label if segment is wide enough
+    seg.innerHTML = `<span class="gg-segment-label">${escapeHtml(row.name)}</span>`;
+    stack.appendChild(seg);
+  });
+}
+
+function renderLeaderboard(rows, goal) {
   const list = document.getElementById('lb-list');
   list.innerHTML = '';
 
@@ -427,11 +472,14 @@ function renderLeaderboard(rows) {
     return;
   }
 
-  const maxTotal = rows[0].total;
+  const maxTotal   = rows[0].total;
+  const groupTotal = rows.reduce((s, r) => s + r.total, 0);
 
   rows.forEach((row, i) => {
-    const rank = i + 1;
-    const pct  = maxTotal > 0 ? (row.total / maxTotal) * 100 : 0;
+    const rank    = i + 1;
+    const barPct  = maxTotal > 0 ? (row.total / maxTotal) * 100 : 0;
+    const contPct = groupTotal > 0 ? Math.round((row.total / groupTotal) * 100) : 0;
+    const colour  = CONTRIBUTION_COLOURS[i % CONTRIBUTION_COLOURS.length];
 
     const el = document.createElement('div');
     el.className = 'lb-row';
@@ -443,8 +491,9 @@ function renderLeaderboard(rows) {
           <span class="lb-meta-item">${row.days_active} day${row.days_active !== 1 ? 's' : ''}</span>
           <span class="lb-meta-item">best <span>${row.best_day}</span></span>
           ${row.today > 0 ? `<span class="lb-meta-item">today <span>${row.today}</span></span>` : ''}
+          <span class="lb-meta-item">share <span>${contPct}%</span></span>
         </div>
-        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${pct}%"></div></div>
+        <div class="lb-bar-wrap"><div class="lb-bar" style="width:${barPct}%;background:${colour}"></div></div>
       </div>
       <div class="lb-total-col">
         <div class="lb-total">${row.total.toLocaleString()}</div>

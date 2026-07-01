@@ -607,6 +607,135 @@ html, body {
   background: var(--white);
 }
 
+/* ─── Group Goal ──────────────────────────────────── */
+
+.group-goal {
+  width: 100%;
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 28px;
+}
+
+.gg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.gg-reward-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.gg-label {
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  color: var(--smokey-pink);
+}
+
+.gg-reward {
+  font-size: 18px;
+  font-weight: 200;
+  color: var(--white);
+  letter-spacing: 0.05em;
+}
+
+.gg-numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+  text-align: right;
+}
+
+.gg-total {
+  font-size: 28px;
+  font-weight: 200;
+  color: var(--peach);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.gg-sep {
+  font-size: 14px;
+  color: var(--border);
+}
+
+.gg-target {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--smokey-pink);
+}
+
+.gg-track {
+  width: 100%;
+  height: 3px;
+  background: var(--border);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.gg-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--peach);
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.gg-fill.complete {
+  background: var(--gumtree);
+}
+
+/* Stacked contribution bar */
+.gg-stack {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 10px;
+  gap: 1px;
+}
+
+.gg-segment {
+  height: 100%;
+  transition: width 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  position: relative;
+  min-width: 2px;
+}
+
+.gg-segment-label {
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 9px;
+  font-family: var(--font);
+  letter-spacing: 0.08em;
+  color: rgba(13,13,15,0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.gg-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.gg-pct {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: var(--silver);
+}
+
+.gg-remaining {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--smokey-pink);
+}
+
 /* ─── Leaderboard ─────────────────────────────────── */
 
 .lb-section {

@@ -102,6 +102,8 @@ app.put('/api/settings/:name', (req, res) => {
   res.json({ daily_target });
 });
 
+const GROUP_GOAL = { target: 50000, reward: 'Third Wave' };
+
 // All-time leaderboard
 app.get('/api/leaderboard', (req, res) => {
   const rows = db.prepare(`
@@ -118,7 +120,7 @@ app.get('/api/leaderboard', (req, res) => {
     ORDER BY total DESC
   `).all(getToday());
 
-  res.json(rows);
+  res.json({ rows, goal: GROUP_GOAL });
 });
 
 app.listen(PORT, () => {

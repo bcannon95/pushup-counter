@@ -112,6 +112,31 @@
       <button id="leaderboard-back-btn" class="btn-ghost">track</button>
     </header>
     <div class="lb-section">
+      <!-- Group goal -->
+      <div id="group-goal" class="group-goal">
+        <div class="gg-header">
+          <div class="gg-reward-wrap">
+            <span class="gg-label">GROUP GOAL</span>
+            <span class="gg-reward" id="gg-reward"></span>
+          </div>
+          <div class="gg-numbers">
+            <span id="gg-total" class="gg-total">0</span>
+            <span class="gg-sep">/</span>
+            <span id="gg-target" class="gg-target">50,000</span>
+          </div>
+        </div>
+        <!-- Overall progress bar -->
+        <div class="gg-track">
+          <div id="gg-fill" class="gg-fill"></div>
+        </div>
+        <!-- Stacked contribution bar -->
+        <div id="gg-stack" class="gg-stack"></div>
+        <div class="gg-footer">
+          <span id="gg-pct" class="gg-pct">0%</span>
+          <span class="gg-remaining" id="gg-remaining"></span>
+        </div>
+      </div>
+
       <div class="lb-heading">
         <span class="history-title">ALL-TIME</span>
         <button id="leaderboard-refresh-btn" class="btn-ghost">refresh</button>
