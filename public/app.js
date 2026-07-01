@@ -421,8 +421,16 @@ async function loadLeaderboard() {
 
   try {
     const data = await fetch('/api/leaderboard').then(r => r.json());
-    renderGroupGoal(data.rows, data.goal);
-    renderLeaderboard(data.rows, data.goal);
+    // pg returns numeric aggregates as strings — coerce to numbers
+    const rows = data.rows.map(r => ({
+      ...r,
+      total:       Number(r.total),
+      days_active: Number(r.days_active),
+      best_day:    Number(r.best_day),
+      today:       Number(r.today),
+    }));
+    renderGroupGoal(rows, data.goal);
+    renderLeaderboard(rows, data.goal);
   } catch {
     list.innerHTML = '<div class="lb-empty">failed to load</div>';
   }
