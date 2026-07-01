@@ -163,7 +163,6 @@ async function bankReps() {
   const amount = pendingReps;
   const bankBtn = document.getElementById('bank-btn');
   bankBtn.disabled = true;
-  bankBtn.textContent = 'SAVING...';
 
   try {
     const result = await API.bank(currentUser.name, amount);
@@ -186,8 +185,6 @@ async function bankReps() {
   } catch (err) {
     console.error('Bank failed:', err);
     bankBtn.disabled = false;
-  } finally {
-    bankBtn.innerHTML = 'BANK <span id="bank-amount">' + pendingReps + '</span>';
   }
 }
 
