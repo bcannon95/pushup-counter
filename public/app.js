@@ -145,11 +145,11 @@ function updatePendingUI() {
   const bankBtn    = document.getElementById('bank-btn');
   const bankAmount = document.getElementById('bank-amount');
 
-  pendingEl.textContent = pendingReps;
+  pendingEl.textContent = pendingReps || '';
   pendingEl.classList.toggle('zero', pendingReps === 0);
   bankBtn.disabled = pendingReps === 0;
   bankAmount.textContent = pendingReps;
-  wheelCenterText.textContent = pendingReps;
+  wheelCenterText.textContent = pendingReps || '';
 }
 
 // ─── Bank ─────────────────────────────────────────────
