@@ -155,10 +155,15 @@ function updatePendingUI() {
 // ─── Bank ─────────────────────────────────────────────
 async function bankReps() {
   if (pendingReps === 0) return;
+  if (!currentUser) {
+    showNameScreen();
+    return;
+  }
 
   const amount = pendingReps;
   const bankBtn = document.getElementById('bank-btn');
   bankBtn.disabled = true;
+  bankBtn.textContent = 'SAVING...';
 
   try {
     const result = await API.bank(currentUser.name, amount);
@@ -179,8 +184,10 @@ async function bankReps() {
     if (wasBelow && isAtOrAbove) showCelebration(todayBanked);
 
   } catch (err) {
-    console.error(err);
+    console.error('Bank failed:', err);
     bankBtn.disabled = false;
+  } finally {
+    bankBtn.innerHTML = 'BANK <span id="bank-amount">' + pendingReps + '</span>';
   }
 }
 
